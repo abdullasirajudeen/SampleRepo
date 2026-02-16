@@ -1,0 +1,112 @@
+<div class="hotel-list-container">
+  <div class="content-wrapper">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+      <h2>Filters</h2>
+      
+      <div class="filter-group">
+        <label for="cityFilter">City</label>
+        <input
+          type="text"
+          id="cityFilter"
+          [(ngModel)]="searchCity"
+          placeholder="Enter city name"
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="ratingFilter">Minimum Rating</label>
+        <select id="ratingFilter" [(ngModel)]="minRating" class="form-control">
+          <option [ngValue]="null">Any</option>
+          <option [ngValue]="3">3+ Stars</option>
+          <option [ngValue]="4">4+ Stars</option>
+          <option [ngValue]="5">5 Stars</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="priceFilter">Max Price (per night)</label>
+        <input
+          type="number"
+          id="priceFilter"
+          [(ngModel)]="maxPrice"
+          placeholder="Enter max price"
+          class="form-control"
+          min="0"
+        />
+      </div>
+
+      <div class="filter-actions">
+        <button (click)="applyFilters()" class="btn btn-primary">Apply Filters</button>
+        <button (click)="clearFilters()" class="btn btn-secondary">Clear Filters</button>
+      </div>
+    </aside>
+
+    <!-- Hotels Grid -->
+    <main class="hotels-main">
+      <h1>Available Hotels</h1>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading">
+        <p>Loading hotels...</p>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        <p>{{ errorMessage }}</p>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!isLoading && !errorMessage && hotels.length === 0" class="no-results">
+        <p>No hotels found matching your criteria.</p>
+        <button (click)="clearFilters()" class="btn btn-primary">Clear Filters</button>
+      </div>
+
+      <!-- Hotels Grid -->
+      <div *ngIf="!isLoading && !errorMessage && hotels.length > 0" class="hotels-grid">
+        <div *ngFor="let hotel of hotels" class="hotel-card" (click)="viewHotelDetails(hotel.id)">
+          <div class="hotel-image">
+            <img [src]="hotel.imageUrl || 'assets/placeholder-hotel.jpg'" [alt]="hotel.name" />
+            <div class="hotel-rating-badge">
+              <span class="rating-number">{{ hotel.averageRating.toFixed(1) }}</span>
+              <span class="rating-stars">⭐</span>
+            </div>
+          </div>
+
+          <div class="hotel-content">
+            <h3>{{ hotel.name }}</h3>
+            
+            <div class="hotel-meta">
+              <span class="location">📍 {{ hotel.city }}, {{ hotel.country }}</span>
+              <div class="star-rating">
+                <span *ngFor="let star of getStarArray(hotel.starRating)">⭐</span>
+              </div>
+            </div>
+
+            <p class="hotel-description">{{ hotel.description | slice:0:150 }}...</p>
+
+            <div class="hotel-amenities" *ngIf="hotel.amenities">
+              <span class="amenity" *ngFor="let amenity of hotel.amenities.split(',').slice(0, 3)">
+                {{ amenity.trim() }}
+              </span>
+            </div>
+
+            <div class="hotel-footer">
+              <div class="price-info">
+                <span class="from-text">From</span>
+                <span class="price">${{ getMinPrice(hotel) }}</span>
+                <span class="per-night">/night</span>
+              </div>
+              <div class="reviews-info">
+                <span>{{ hotel.reviewCount }} reviews</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-view">View Details</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

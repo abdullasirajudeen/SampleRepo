@@ -1,0 +1,142 @@
+<div class="booking-container">
+  <div class="booking-header">
+    <h1>Complete Your Booking</h1>
+    <p>Please review your booking details and confirm</p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div class="booking-content">
+    <!-- Booking Form -->
+    <div class="booking-form">
+      <h2>Booking Details</h2>
+
+      <form (ngSubmit)="submitBooking()">
+        <div class="form-group">
+          <label for="checkIn">Check-in Date *</label>
+          <input
+            type="date"
+            id="checkIn"
+            [(ngModel)]="bookingData.checkInDate"
+            name="checkIn"
+            class="form-control"
+            (change)="onDateChange()"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="checkOut">Check-out Date *</label>
+          <input
+            type="date"
+            id="checkOut"
+            [(ngModel)]="bookingData.checkOutDate"
+            name="checkOut"
+            class="form-control"
+            (change)="onDateChange()"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="guests">Number of Guests *</label>
+          <input
+            type="number"
+            id="guests"
+            [(ngModel)]="bookingData.numberOfGuests"
+            name="guests"
+            min="1"
+            [max]="room?.capacity || 10"
+            class="form-control"
+            required
+          />
+          <small *ngIf="room">Maximum capacity: {{ room.capacity }} guests</small>
+        </div>
+
+        <div class="form-group">
+          <label for="specialRequests">Special Requests (Optional)</label>
+          <textarea
+            id="specialRequests"
+            [(ngModel)]="bookingData.specialRequests"
+            name="specialRequests"
+            class="form-control"
+            rows="4"
+            placeholder="e.g., Early check-in, extra pillows, airport pickup..."
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" (click)="cancel()" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+            {{ isLoading ? 'Processing...' : 'Confirm Booking' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Booking Summary -->
+    <div class="booking-summary">
+      <h2>Booking Summary</h2>
+
+      <div class="summary-card" *ngIf="room">
+        <div class="hotel-info">
+          <h3>{{ room.hotel?.name }}</h3>
+          <p class="location">{{ room.hotel?.city }}, {{ room.hotel?.country }}</p>
+        </div>
+
+        <div class="room-info">
+          <h4>{{ room.roomType }}</h4>
+          <p>Room {{ room.roomNumber }}</p>
+          <div class="room-features">
+            <span>👥 {{ room.capacity }} guests</span>
+            <span>🛏️ {{ room.bedCount }} bed(s)</span>
+          </div>
+        </div>
+
+        <div class="date-info">
+          <div class="date-row">
+            <span class="label">Check-in:</span>
+            <span class="value">{{ bookingData.checkInDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="date-row">
+            <span class="label">Check-out:</span>
+            <span class="value">{{ bookingData.checkOutDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="date-row">
+            <span class="label">Number of nights:</span>
+            <span class="value">{{ numberOfNights }}</span>
+          </div>
+        </div>
+
+        <div class="price-breakdown">
+          <h3>Price Breakdown</h3>
+          <div class="price-row">
+            <span>{{ room.pricePerNight | currency }} × {{ numberOfNights }} night(s)</span>
+            <span>{{ totalPrice | currency }}</span>
+          </div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span class="total-amount">{{ totalPrice | currency }}</span>
+          </div>
+        </div>
+
+        <div class="cancellation-policy">
+          <h4>Cancellation Policy</h4>
+          <p>Free cancellation up to 24 hours before check-in. After that, cancellation fees may apply.</p>
+        </div>
+      </div>
+
+      <div class="loading-summary" *ngIf="!room">
+        <p>Loading booking details...</p>
+      </div>
+    </div>
+  </div>
+</div>

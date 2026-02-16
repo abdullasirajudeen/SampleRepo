@@ -1,0 +1,157 @@
+<div class="hotel-details-container" *ngIf="hotel">
+  <!-- Back Button -->
+  <button (click)="goBack()" class="btn-back">← Back to Hotels</button>
+
+  <!-- Hotel Header -->
+  <div class="hotel-header">
+    <div class="hotel-image-main">
+      <img [src]="hotel.imageUrl || 'assets/placeholder-hotel.jpg'" [alt]="hotel.name" />
+    </div>
+
+    <div class="hotel-header-info">
+      <h1>{{ hotel.name }}</h1>
+      <div class="hotel-location">
+        <span>📍 {{ hotel.address }}, {{ hotel.city }}, {{ hotel.country }}</span>
+      </div>
+      <div class="hotel-rating-section">
+        <div class="star-rating">
+          <span *ngFor="let star of getStarArray(hotel.starRating)">⭐</span>
+          <span class="star-text">{{ hotel.starRating }}-Star Hotel</span>
+        </div>
+        <div class="reviews-rating">
+          <span class="rating-score">{{ hotel.averageRating.toFixed(1) }}</span>
+          <span class="reviews-count">({{ hotel.reviewCount }} reviews)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-navigation">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'overview'"
+      (click)="setActiveTab('overview')">
+      Overview
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'rooms'"
+      (click)="setActiveTab('rooms')">
+      Rooms & Availability
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'reviews'"
+      (click)="setActiveTab('reviews')">
+      Reviews
+    </button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <!-- Overview Tab -->
+    <div *ngIf="activeTab === 'overview'" class="overview-section">
+      <div class="description-card">
+        <h2>About This Hotel</h2>
+        <p>{{ hotel.description }}</p>
+      </div>
+
+      <div class="amenities-card" *ngIf="hotel.amenities">
+        <h2>Amenities</h2>
+        <div class="amenities-grid">
+          <div class="amenity-item" *ngFor="let amenity of hotel.amenities.split(',')">
+            <span class="amenity-icon">✓</span>
+            <span>{{ amenity.trim() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rooms Tab -->
+    <div *ngIf="activeTab === 'rooms'" class="rooms-section">
+      <div class="date-selector">
+        <h2>Select Your Dates</h2>
+        <div class="date-inputs">
+          <div class="date-group">
+            <label>Check-in</label>
+            <input type="date" [(ngModel)]="checkInDate" class="form-control" />
+          </div>
+          <div class="date-group">
+            <label>Check-out</label>
+            <input type="date" [(ngModel)]="checkOutDate" class="form-control" />
+          </div>
+          <button (click)="searchAvailableRooms()" class="btn btn-primary">Search</button>
+        </div>
+      </div>
+
+      <div class="rooms-list">
+        <h2>Available Rooms</h2>
+        <div *ngIf="rooms.length === 0" class="no-rooms">
+          <p>No rooms available for the selected dates.</p>
+        </div>
+        <div *ngFor="let room of rooms" class="room-card">
+          <div class="room-image">
+            <img [src]="room.imageUrl || 'assets/placeholder-room.jpg'" [alt]="room.roomType" />
+          </div>
+          <div class="room-details">
+            <h3>{{ room.roomType }} - Room {{ room.roomNumber }}</h3>
+            <p class="room-description">{{ room.description }}</p>
+            <div class="room-features">
+              <span class="feature">👥 Capacity: {{ room.capacity }}</span>
+              <span class="feature">🛏️ Beds: {{ room.bedCount }}</span>
+              <span class="feature" *ngIf="room.sizeInSqMeters">📏 {{ room.sizeInSqMeters }} m²</span>
+            </div>
+            <div class="room-amenities" *ngIf="room.amenities">
+              <span *ngFor="let amenity of room.amenities.split(',').slice(0, 4)" class="amenity-tag">
+                {{ amenity.trim() }}
+              </span>
+            </div>
+          </div>
+          <div class="room-booking">
+            <div class="price-section">
+              <span class="price-label">Price per night</span>
+              <span class="price-amount">${{ room.pricePerNight }}</span>
+            </div>
+            <button (click)="bookRoom(room)" class="btn btn-primary">Book Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div *ngIf="activeTab === 'reviews'" class="reviews-section">
+      <h2>Guest Reviews</h2>
+      <div *ngIf="!hotel.reviews || hotel.reviews.length === 0" class="no-reviews">
+        <p>No reviews yet. Be the first to review!</p>
+      </div>
+      <div *ngFor="let review of hotel.reviews" class="review-card">
+        <div class="review-header">
+          <div class="reviewer-info">
+            <strong>{{ review.user?.fullName || 'Anonymous' }}</strong>
+            <span class="review-date">{{ review.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="review-rating">
+            <span *ngFor="let star of getStarArray(review.rating)">⭐</span>
+          </div>
+        </div>
+        <h4>{{ review.title }}</h4>
+        <p>{{ review.comment }}</p>
+        <div class="review-footer" *ngIf="review.isVerified">
+          <span class="verified-badge">✓ Verified Stay</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="loading">
+  <p>Loading hotel details...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="errorMessage" class="error-message">
+  <p>{{ errorMessage }}</p>
+  <button (click)="goBack()" class="btn btn-primary">Go Back</button>
+</div>

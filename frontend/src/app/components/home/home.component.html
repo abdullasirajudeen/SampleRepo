@@ -1,0 +1,102 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Find Your Perfect Stay</h1>
+      <p>Book hotels worldwide with the best prices and service</p>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-container">
+      <h2>Search Hotels</h2>
+      <form (ngSubmit)="searchHotels()" class="search-form">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input
+            type="text"
+            id="city"
+            [(ngModel)]="searchCity"
+            name="city"
+            placeholder="Enter city name"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="checkIn">Check-in</label>
+          <input
+            type="date"
+            id="checkIn"
+            [(ngModel)]="checkInDate"
+            name="checkIn"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="checkOut">Check-out</label>
+          <input
+            type="date"
+            id="checkOut"
+            [(ngModel)]="checkOutDate"
+            name="checkOut"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="guests">Guests</label>
+          <input
+            type="number"
+            id="guests"
+            [(ngModel)]="guests"
+            name="guests"
+            min="1"
+            max="10"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Search Hotels</button>
+      </form>
+
+      <div class="quick-actions">
+        <button (click)="viewAllHotels()" class="btn btn-secondary">View All Hotels</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-container">
+      <h2>Why Book With Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🏨</div>
+          <h3>Wide Selection</h3>
+          <p>Choose from thousands of hotels worldwide</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Best Prices</h3>
+          <p>Get the best deals and exclusive offers</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⭐</div>
+          <h3>Verified Reviews</h3>
+          <p>Read authentic reviews from real guests</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure Booking</h3>
+          <p>Your information is safe and secure</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
