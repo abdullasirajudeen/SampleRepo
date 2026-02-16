@@ -1,0 +1,70 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo/Brand -->
+    <div class="navbar-brand">
+      <a routerLink="/" (click)="closeMobileMenu()">
+        <h1>🏨 HotelBooking</h1>
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="navbar-menu" [class.active]="isMobileMenuOpen">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/hotels" routerLinkActive="active" (click)="closeMobileMenu()">
+            Hotels
+          </a>
+        </li>
+        
+        <!-- Authenticated User Links -->
+        <ng-container *ngIf="isAuthenticated()">
+          <li class="nav-item">
+            <a routerLink="/bookings" routerLinkActive="active" (click)="closeMobileMenu()">
+              My Bookings
+            </a>
+          </li>
+          
+          <!-- Admin Links -->
+          <li class="nav-item" *ngIf="isAdmin()">
+            <a routerLink="/admin" routerLinkActive="active" (click)="closeMobileMenu()">
+              Admin Panel
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+
+      <!-- User Actions -->
+      <div class="navbar-actions">
+        <ng-container *ngIf="!isAuthenticated()">
+          <a routerLink="/login" class="btn btn-outline" (click)="closeMobileMenu()">
+            Login
+          </a>
+          <a routerLink="/register" class="btn btn-primary" (click)="closeMobileMenu()">
+            Register
+          </a>
+        </ng-container>
+
+        <ng-container *ngIf="isAuthenticated()">
+          <div class="user-menu">
+            <span class="user-name">{{ currentUser?.fullName }}</span>
+            <button class="btn btn-outline" (click)="logout()">
+              Logout
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</nav>
