@@ -171,18 +171,18 @@ public class UsersController : ControllerBase
 
     private string HashPassword(string password)
     {
-        using var hmac = new HMACSHA512();
-        var passwordBytes = Encoding.UTF8.GetBytes(password);
-        var hash = hmac.ComputeHash(passwordBytes);
+        // Simple hash for demo - In production, use BCrypt or ASP.NET Core Identity
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var passwordBytes = Encoding.UTF8.GetBytes(password + "HotelBookingSalt2024"); // Salt added
+        var hash = sha256.ComputeHash(passwordBytes);
         return Convert.ToBase64String(hash);
     }
 
     private bool VerifyPassword(string password, string storedHash)
     {
-        // For demo purposes, we're using a simple hash comparison
-        // In production, use a proper password hashing library like BCrypt or Identity
+        // Compare hashed passwords
         var passwordHash = HashPassword(password);
-        return passwordHash == storedHash || storedHash == "AQAAAAEAACcQAAAAEK3xqjQZh7lJZGZvLjl1gK7k8kJqvN3L8jB6R9hXqX9pI8fZ6mH3jJ4rK5pN1qO2w==";
+        return passwordHash == storedHash;
     }
 
     private string GenerateJwtToken(User user)

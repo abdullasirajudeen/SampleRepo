@@ -73,7 +73,7 @@ public class HotelBookingContext : DbContext
                 FirstName = "Admin",
                 LastName = "User",
                 Email = "admin@hotelbooking.com",
-                PasswordHash = "AQAAAAEAACcQAAAAEK3xqjQZh7lJZGZvLjl1gK7k8kJqvN3L8jB6R9hXqX9pI8fZ6mH3jJ4rK5pN1qO2w==", // Password: Admin@123
+                PasswordHash = "eY0aLY+bXMb1ll0MbeFjoYlhHZHKYPMT+OAqtC7IF0I=", // Password: Admin@123
                 Role = "Admin",
                 IsActive = true
             },
@@ -83,7 +83,7 @@ public class HotelBookingContext : DbContext
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "john.doe@example.com",
-                PasswordHash = "AQAAAAEAACcQAAAAEK3xqjQZh7lJZGZvLjl1gK7k8kJqvN3L8jB6R9hXqX9pI8fZ6mH3jJ4rK5pN1qO2w==", // Password: User@123
+                PasswordHash = "q8cBq4VvDRDArAGOh8KLU0QGtiNVY6JjoJQcE+T5BZ0=", // Password: User@123
                 PhoneNumber = "+1234567890",
                 Role = "User",
                 IsActive = true

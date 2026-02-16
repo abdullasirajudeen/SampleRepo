@@ -115,7 +115,7 @@ A full-stack hotel booking application built with Angular frontend and .NET 8 ba
 
    The API will be available at `https://localhost:5001` or `http://localhost:5000`
 
-6. Access Swagger documentation at `https://localhost:5001` or `http://localhost:5000`
+6. Access Swagger documentation at `https://localhost:5001/swagger` or `http://localhost:5000/swagger`
 
 ### Frontend Setup
 
@@ -240,11 +240,13 @@ The production build will be available in `frontend/dist/hotel-booking-app/`
 
 ## Security Notes
 
-- The default JWT secret key in `appsettings.json` should be changed in production
-- Password hashing is simplified for demo purposes; use a proper library like BCrypt in production
+- The JWT secret key in `appsettings.json` should be changed to a strong random value in production and stored in environment variables
+- The current password hashing uses SHA256 with a salt for demo purposes; use BCrypt.Net or ASP.NET Core Identity for production
+- Tokens and user data are stored in localStorage; consider using httpOnly cookies for production
 - Enable HTTPS in production
 - Update CORS policy for production domains
 - Implement rate limiting and other security measures for production deployment
+- Remove or secure Swagger in production environment
 
 ## Contributing
 
