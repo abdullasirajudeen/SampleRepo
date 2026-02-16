@@ -1,0 +1,123 @@
+<div class="container mt-4 mb-5">
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (hotel && !isLoading) {
+    <div class="row">
+      <div class="col-lg-8">
+        <img [src]="hotel.imageUrl || 'https://via.placeholder.com/800x400?text=' + hotel.name" class="img-fluid rounded mb-4" [alt]="hotel.name">
+        
+        <h1>{{ hotel.name }}</h1>
+        <div class="mb-3">
+          @for (star of getStarArray(hotel.starRating); track $index) {
+            <i class="bi bi-star-fill text-warning"></i>
+          }
+        </div>
+        
+        <p class="text-muted">
+          <i class="bi bi-geo-alt-fill"></i> {{ hotel.address }}, {{ hotel.city }}, {{ hotel.country }}
+        </p>
+
+        @if (hotel.phoneNumber) {
+          <p><i class="bi bi-telephone-fill"></i> {{ hotel.phoneNumber }}</p>
+        }
+
+        @if (hotel.email) {
+          <p><i class="bi bi-envelope-fill"></i> {{ hotel.email }}</p>
+        }
+
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">About</h5>
+            <p class="card-text">{{ hotel.description }}</p>
+          </div>
+        </div>
+
+        <!-- Available Rooms -->
+        <h3 class="mb-3">Available Rooms</h3>
+        @if (rooms.length === 0) {
+          <div class="alert alert-info">No rooms available at this hotel.</div>
+        } @else {
+          <div class="row">
+            @for (room of rooms; track room.id) {
+              <div class="col-md-6 mb-3">
+                <div class="card">
+                  <img [src]="room.imageUrl || 'https://via.placeholder.com/400x300?text=' + room.roomType" class="card-img-top" [alt]="room.roomType">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ room.roomType }} - Room {{ room.roomNumber }}</h5>
+                    <p class="card-text">{{ room.description }}</p>
+                    <p class="card-text">
+                      <strong>Price:</strong> ${{ room.pricePerNight }}/night<br>
+                      <strong>Max Occupancy:</strong> {{ room.maxOccupancy }} guests
+                    </p>
+                    <div class="mb-2">
+                      @if (room.hasWifi) { <span class="badge bg-info me-1">WiFi</span> }
+                      @if (room.hasAirConditioning) { <span class="badge bg-info me-1">A/C</span> }
+                      @if (room.hasTV) { <span class="badge bg-info me-1">TV</span> }
+                      @if (room.hasMiniBar) { <span class="badge bg-info me-1">Mini Bar</span> }
+                    </div>
+                    @if (room.isAvailable) {
+                      <a [routerLink]="['/booking', room.id]" class="btn btn-primary">Book Now</a>
+                    } @else {
+                      <button class="btn btn-secondary" disabled>Not Available</button>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Reviews -->
+        <h3 class="mb-3 mt-4">Guest Reviews</h3>
+        @if (reviews.length === 0) {
+          <div class="alert alert-info">No reviews yet for this hotel.</div>
+        } @else {
+          @for (review of reviews; track review.id) {
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">{{ review.title }}</h5>
+                <div class="mb-2">
+                  @for (star of getStarArray(review.rating); track $index) {
+                    <i class="bi bi-star-fill text-warning"></i>
+                  }
+                </div>
+                <p class="card-text">{{ review.comment }}</p>
+                <p class="card-text">
+                  <small class="text-muted">By {{ review.userName }} on {{ review.createdAt | date }}</small>
+                </p>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card sticky-top" style="top: 20px;">
+          <div class="card-body">
+            <h5 class="card-title">Quick Info</h5>
+            @if (hotel.averageRating) {
+              <p class="card-text">
+                <strong>Average Rating:</strong><br>
+                {{ hotel.averageRating | number:'1.1-1' }}/5 ({{ hotel.reviewCount }} reviews)
+              </p>
+            }
+            <hr>
+            <a routerLink="/hotels" class="btn btn-outline-primary w-100">Back to Hotels</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,110 @@
+<div class="container mt-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="mb-4">Book Your Stay</h1>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ errorMessage }}
+          <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+        </div>
+      }
+
+      @if (room) {
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ room.roomType }} - Room {{ room.roomNumber }}</h5>
+            <p class="card-text">{{ room.hotelName }}</p>
+            <p class="card-text"><strong>Price:</strong> ${{ room.pricePerNight }}/night</p>
+            <p class="card-text"><strong>Max Occupancy:</strong> {{ room.maxOccupancy }} guests</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Booking Details</h5>
+            <form (ngSubmit)="onSubmit()" #bookingForm="ngForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="checkInDate" class="form-label">Check-in Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="checkInDate"
+                    name="checkInDate"
+                    [(ngModel)]="booking.checkInDate"
+                    (change)="calculatePrice()"
+                    required
+                  >
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="checkOutDate" class="form-label">Check-out Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="checkOutDate"
+                    name="checkOutDate"
+                    [(ngModel)]="booking.checkOutDate"
+                    (change)="calculatePrice()"
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="numberOfGuests" class="form-label">Number of Guests</label>
+                <select
+                  class="form-select"
+                  id="numberOfGuests"
+                  name="numberOfGuests"
+                  [(ngModel)]="booking.numberOfGuests"
+                  required
+                >
+                  @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
+                    @if (i <= room.maxOccupancy) {
+                      <option [value]="i">{{ i }} {{ i === 1 ? 'Guest' : 'Guests' }}</option>
+                    }
+                  }
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="specialRequests" class="form-label">Special Requests (Optional)</label>
+                <textarea
+                  class="form-control"
+                  id="specialRequests"
+                  name="specialRequests"
+                  [(ngModel)]="booking.specialRequests"
+                  rows="3"
+                  placeholder="Any special requests or requirements?"
+                ></textarea>
+              </div>
+
+              <div class="card bg-light mb-3">
+                <div class="card-body">
+                  <h6 class="card-title">Booking Summary</h6>
+                  <p class="card-text">
+                    <strong>Number of Nights:</strong> {{ numberOfNights }}<br>
+                    <strong>Price per Night:</strong> ${{ room.pricePerNight }}<br>
+                    <strong>Total Price:</strong> <span class="text-primary fs-5">${{ totalPrice | number:'1.2-2' }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg w-100"
+                [disabled]="bookingForm.invalid || isLoading || numberOfNights <= 0"
+              >
+                @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                Confirm Booking
+              </button>
+            </form>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

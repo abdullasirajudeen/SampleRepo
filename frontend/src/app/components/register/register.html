@@ -1,0 +1,149 @@
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">Register</h2>
+          
+          @if (errorMessage) {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ errorMessage }}
+              <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+            </div>
+          }
+
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  name="firstName"
+                  [(ngModel)]="registerData.firstName"
+                  required
+                  #firstNameInput="ngModel"
+                >
+                @if (firstNameInput.invalid && firstNameInput.touched) {
+                  <div class="text-danger small mt-1">First name is required</div>
+                }
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  name="lastName"
+                  [(ngModel)]="registerData.lastName"
+                  required
+                  #lastNameInput="ngModel"
+                >
+                @if (lastNameInput.invalid && lastNameInput.touched) {
+                  <div class="text-danger small mt-1">Last name is required</div>
+                }
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                [(ngModel)]="registerData.email"
+                required
+                email
+                #emailInput="ngModel"
+              >
+              @if (emailInput.invalid && emailInput.touched) {
+                <div class="text-danger small mt-1">Please enter a valid email</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                [(ngModel)]="registerData.password"
+                required
+                minlength="6"
+                #passwordInput="ngModel"
+              >
+              @if (passwordInput.invalid && passwordInput.touched) {
+                <div class="text-danger small mt-1">Password must be at least 6 characters</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Phone Number (Optional)</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="phoneNumber"
+                name="phoneNumber"
+                [(ngModel)]="registerData.phoneNumber"
+              >
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="form-label">Address (Optional)</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                name="address"
+                [(ngModel)]="registerData.address"
+              >
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">City (Optional)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="city"
+                  name="city"
+                  [(ngModel)]="registerData.city"
+                >
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="country" class="form-label">Country (Optional)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="country"
+                  name="country"
+                  [(ngModel)]="registerData.country"
+                >
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="registerForm.invalid || isLoading"
+            >
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Register
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <p class="mb-0">Already have an account? <a routerLink="/login">Login here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
