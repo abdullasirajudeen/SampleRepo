@@ -202,11 +202,19 @@ namespace HotelBooking.API.Services
         /// <returns>Confirmation code</returns>
         private string GenerateConfirmationCode()
         {
-            // Generate a random 8-character alphanumeric code
+            // Generate a cryptographically secure random 8-character alphanumeric code
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, 8)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            var code = new char[8];
+            using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            var randomBytes = new byte[8];
+            rng.GetBytes(randomBytes);
+            
+            for (int i = 0; i < 8; i++)
+            {
+                code[i] = chars[randomBytes[i] % chars.Length];
+            }
+            
+            return new string(code);
         }
     }
 }

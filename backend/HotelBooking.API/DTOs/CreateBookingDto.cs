@@ -40,10 +40,13 @@ namespace HotelBooking.API.DTOs
 
         /// <summary>
         /// Validates that check-out date is after check-in date
+        /// Note: Validation uses current UTC date, ensure dates are properly converted on the client
         /// </summary>
         public bool IsValid()
         {
-            return CheckOutDate > CheckInDate && CheckInDate >= DateTime.UtcNow.Date;
+            // Allow bookings from today onwards (with some grace period for same-day bookings)
+            var minDate = DateTime.UtcNow.Date.AddDays(-1);
+            return CheckOutDate > CheckInDate && CheckInDate >= minDate;
         }
     }
 }

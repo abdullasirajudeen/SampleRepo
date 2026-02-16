@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -21,8 +22,8 @@ export class AuthService extends ApiService {
    */
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor() {
-    super(null as any); // Will be injected properly in module
+  constructor(http: HttpClient) {
+    super(http);
     this.loadUserFromStorage();
   }
 

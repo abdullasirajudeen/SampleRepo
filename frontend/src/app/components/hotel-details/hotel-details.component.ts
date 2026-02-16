@@ -59,12 +59,14 @@ export class HotelDetailsComponent implements OnInit {
       }
     });
 
-    // Set default dates
+    // Set default dates (tomorrow and day after for better user experience)
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    this.checkInDate = today;
-    this.checkOutDate = tomorrow;
+    const dayAfter = new Date(tomorrow);
+    dayAfter.setDate(dayAfter.getDate() + 1);
+    this.checkInDate = tomorrow;
+    this.checkOutDate = dayAfter;
   }
 
   /**

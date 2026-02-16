@@ -21,13 +21,15 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Set default dates (today and tomorrow)
+    // Set default dates (tomorrow and day after for better user experience)
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const dayAfter = new Date(tomorrow);
+    dayAfter.setDate(dayAfter.getDate() + 1);
     
-    this.checkInDate = today;
-    this.checkOutDate = tomorrow;
+    this.checkInDate = tomorrow;
+    this.checkOutDate = dayAfter;
   }
 
   /**

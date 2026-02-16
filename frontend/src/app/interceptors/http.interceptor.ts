@@ -32,12 +32,18 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       // });
     }
 
-    // Add common headers
+    // Add common headers only if not already set and request has a JSON body
+    const headers: { [key: string]: string } = {
+      'Accept': 'application/json'
+    };
+    
+    // Only set Content-Type if the request body is JSON and header is not already set
+    if (request.body && !request.headers.has('Content-Type')) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     request = request.clone({
-      setHeaders: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+      setHeaders: headers
     });
 
     // Handle the request and catch any errors
