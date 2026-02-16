@@ -33,7 +33,7 @@ A complete hotel booking web application built with .NET 8 backend and Angular f
 - Swashbuckle (Swagger)
 
 ### Frontend
-- Angular 17
+- Angular 21
 - TypeScript
 - RxJS
 - HTML5/CSS3
