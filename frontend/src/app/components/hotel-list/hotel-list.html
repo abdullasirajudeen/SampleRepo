@@ -1,0 +1,111 @@
+<div class="container mt-4">
+  <h1 class="mb-4">Browse Hotels</h1>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Filters</h5>
+      <form (ngSubmit)="applyFilters()">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="city" class="form-label">City</label>
+            <input
+              type="text"
+              class="form-control"
+              id="city"
+              name="city"
+              [(ngModel)]="searchCity"
+              placeholder="Enter city"
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="country" class="form-label">Country</label>
+            <input
+              type="text"
+              class="form-control"
+              id="country"
+              name="country"
+              [(ngModel)]="searchCountry"
+              placeholder="Enter country"
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="starRating" class="form-label">Minimum Star Rating</label>
+            <select
+              class="form-select"
+              id="starRating"
+              name="starRating"
+              [(ngModel)]="minStarRating"
+            >
+              <option [ngValue]="undefined">Any</option>
+              <option [ngValue]="1">1 Star</option>
+              <option [ngValue]="2">2 Stars</option>
+              <option [ngValue]="3">3 Stars</option>
+              <option [ngValue]="4">4 Stars</option>
+              <option [ngValue]="5">5 Stars</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Apply Filters</button>
+          <button type="button" class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Hotels List -->
+  @if (!isLoading && !errorMessage) {
+    @if (filteredHotels.length === 0) {
+      <div class="alert alert-info" role="alert">
+        No hotels found matching your criteria.
+      </div>
+    } @else {
+      <div class="row">
+        @for (hotel of filteredHotels; track hotel.id) {
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+              <img [src]="hotel.imageUrl || 'https://via.placeholder.com/400x300?text=Hotel'" class="card-img-top" [alt]="hotel.name">
+              <div class="card-body">
+                <h5 class="card-title">{{ hotel.name }}</h5>
+                <p class="card-text text-muted">
+                  <i class="bi bi-geo-alt"></i> {{ hotel.city }}, {{ hotel.country }}
+                </p>
+                <div class="mb-2">
+                  @for (star of getStarArray(hotel.starRating); track $index) {
+                    <i class="bi bi-star-fill text-warning"></i>
+                  }
+                </div>
+                @if (hotel.averageRating) {
+                  <p class="card-text">
+                    <small class="text-muted">
+                      Rating: {{ hotel.averageRating | number:'1.1-1' }} ({{ hotel.reviewCount }} reviews)
+                    </small>
+                  </p>
+                }
+                <p class="card-text">{{ hotel.description | slice:0:100 }}...</p>
+                <a [routerLink]="['/hotels', hotel.id]" class="btn btn-primary">View Details</a>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

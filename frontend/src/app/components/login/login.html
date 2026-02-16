@@ -1,0 +1,68 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4">Login</h2>
+          
+          @if (errorMessage) {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ errorMessage }}
+              <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+            </div>
+          }
+
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                [(ngModel)]="credentials.email"
+                required
+                email
+                #emailInput="ngModel"
+              >
+              @if (emailInput.invalid && emailInput.touched) {
+                <div class="text-danger small mt-1">Please enter a valid email</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                [(ngModel)]="credentials.password"
+                required
+                #passwordInput="ngModel"
+              >
+              @if (passwordInput.invalid && passwordInput.touched) {
+                <div class="text-danger small mt-1">Password is required</div>
+              }
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="loginForm.invalid || isLoading"
+            >
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              Login
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <p class="mb-0">Don't have an account? <a routerLink="/register">Register here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
