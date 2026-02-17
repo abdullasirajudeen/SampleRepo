@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auth Module Tests</title>
+  <style>
+    body { font-family: monospace; padding: 1rem; }
+    .pass { color: green; }
+    .fail { color: red; }
+    h2 { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Auth Module Tests</h1>
+  <div id="results"></div>
+  <script src="../js/auth.js"></script>
+  <script>
+    var results = document.getElementById("results");
+    var passed = 0;
+    var failed = 0;
+
+    function assert(description, condition) {
+      var el = document.createElement("div");
+      if (condition) {
+        el.className = "pass";
+        el.textContent = "✓ PASS: " + description;
+        passed++;
+      } else {
+        el.className = "fail";
+        el.textContent = "✗ FAIL: " + description;
+        failed++;
+      }
+      results.appendChild(el);
+    }
+
+    function section(name) {
+      var el = document.createElement("h2");
+      el.textContent = name;
+      results.appendChild(el);
+    }
+
+    // Clear session before tests
+    sessionStorage.clear();
+
+    // --- Username Validation ---
+    section("Username Validation");
+    assert("Empty username returns error", Auth.validateUsername("") === "Username is required");
+    assert("Null username returns error", Auth.validateUsername(null) === "Username is required");
+    assert("Short username returns error", Auth.validateUsername("ab") === "Username must be at least 3 characters");
+    assert("Valid username returns empty string", Auth.validateUsername("admin") === "");
+    assert("Whitespace-only username returns error", Auth.validateUsername("   ") === "Username is required");
+
+    // --- Password Validation ---
+    section("Password Validation");
+    assert("Empty password returns error", Auth.validatePassword("") === "Password is required");
+    assert("Null password returns error", Auth.validatePassword(null) === "Password is required");
+    assert("Short password returns error", Auth.validatePassword("abc") === "Password must be at least 6 characters");
+    assert("Valid password returns empty string", Auth.validatePassword("admin123") === "");
+
+    // --- Login ---
+    section("Login");
+    sessionStorage.clear();
+    var result1 = Auth.login("admin", "admin123");
+    assert("Valid admin login succeeds", result1.success === true);
+    assert("Valid admin login returns user object", result1.user.username === "admin");
+    assert("Valid admin login returns name", result1.user.name === "Admin User");
+
+    sessionStorage.clear();
+    var result2 = Auth.login("admin", "wrongpassword");
+    assert("Wrong password fails", result2.success === false);
+    assert("Wrong password returns error message", result2.message === "Invalid username or password");
+
+    sessionStorage.clear();
+    var result3 = Auth.login("nonexistent", "password123");
+    assert("Nonexistent user fails", result3.success === false);
+
+    sessionStorage.clear();
+    var result4 = Auth.login("", "password123");
+    assert("Empty username fails login", result4.success === false);
+
+    sessionStorage.clear();
+    var result5 = Auth.login("admin", "");
+    assert("Empty password fails login", result5.success === false);
+
+    // --- Session Management ---
+    section("Session Management");
+    sessionStorage.clear();
+    assert("Not logged in initially", Auth.isLoggedIn() === false);
+    assert("getCurrentUser returns null when not logged in", Auth.getCurrentUser() === null);
+
+    Auth.login("admin", "admin123");
+    assert("Logged in after valid login", Auth.isLoggedIn() === true);
+    assert("getCurrentUser returns user after login", Auth.getCurrentUser().username === "admin");
+
+    Auth.logout();
+    assert("Not logged in after logout", Auth.isLoggedIn() === false);
+    assert("getCurrentUser returns null after logout", Auth.getCurrentUser() === null);
+
+    // --- Case Insensitivity ---
+    section("Case Insensitivity");
+    sessionStorage.clear();
+    var result6 = Auth.login("Admin", "admin123");
+    assert("Login is case-insensitive for username", result6.success === true);
+
+    sessionStorage.clear();
+    var result7 = Auth.login("ADMIN", "admin123");
+    assert("Uppercase username login succeeds", result7.success === true);
+
+    // --- Summary ---
+    sessionStorage.clear();
+    var summary = document.createElement("h2");
+    summary.textContent = "Results: " + passed + " passed, " + failed + " failed";
+    summary.style.color = failed === 0 ? "green" : "red";
+    results.appendChild(summary);
+  </script>
+</body>
+</html>

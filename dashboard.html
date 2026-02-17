@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>Dashboard</h1>
+      <div>
+        <span id="headerUser"></span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </header>
+    <main class="dashboard-content">
+      <div class="welcome-card">
+        <h2>Welcome, <span id="welcomeUser"></span>!</h2>
+        <p>You have successfully logged in to the dashboard.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Projects</h3>
+          <div class="stat-value">12</div>
+        </div>
+        <div class="stat-card">
+          <h3>Active Tasks</h3>
+          <div class="stat-value">5</div>
+        </div>
+        <div class="stat-card">
+          <h3>Completed</h3>
+          <div class="stat-value">34</div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
