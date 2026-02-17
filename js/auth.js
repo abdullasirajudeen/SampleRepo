@@ -4,6 +4,7 @@
  */
 
 var Auth = (function () {
+  // Demo credentials for demonstration purposes only. Do not use in production.
   var VALID_USERS = [
     { username: "admin", password: "admin123", name: "Admin User" },
     { username: "user", password: "user123", name: "Regular User" },
@@ -30,7 +31,7 @@ var Auth = (function () {
    * Returns an error message string, or empty string if valid.
    */
   function validatePassword(password) {
-    if (!password || password === "") {
+    if (!password || password.trim() === "") {
       return "Password is required";
     }
     if (password.length < 6) {
